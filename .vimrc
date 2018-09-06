@@ -42,8 +42,11 @@ set dir^=~/.backup//
 "   your search always case-insensitive or case-sensitive, respectively.
 set ignorecase
 
+" tab indentations for various file types
+autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 
-set backspace=indent,eol,start
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd FileType markdown setlocal expandtab shiftwidth=4 softtabstop=4
 
 " automatically downloads vim-plug to your machine if not found.
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -53,6 +56,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 let mapleader = " "
+
+" emulate system clipboard
+inoremap <C-v> <ESC>"+pa
+vnoremap <C-c> "+y
 
 " Define plugins to install
 call plug#begin('~/.vim/plugged')
@@ -107,10 +114,10 @@ nmap <leader>bl :ls<CR>
 
 
 " Use arrow keys to navigate window splits
-" nnoremap <silent> <Right> :wincmd l <CR>
-" nnoremap <silent> <Left> :wincmd h <CR>
-" noremap <silent> <Up> :wincmd k <CR>
-" noremap <silent> <Down> :wincmd j <CR>
+noremap <leader><Right> :wincmd l <CR>
+noremap <leader><Left> :wincmd h <CR>
+noremap <leader><Up> :wincmd k <CR>
+noremap <leader><Down> :wincmd j <CR>
 
 " ctrl-p
 let g:ctrlp_custom_ignore = {
@@ -126,6 +133,7 @@ nmap <leader>p :CtrlP<cr>
 " Nerdtree
 " autocmd vimenter * NERDTree
 autocmd StdinReadPre * let s:std_in=1
+let NERDTreeWinSize = 50
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 map <C-n> :NERDTreeToggle<CR>
@@ -165,11 +173,18 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_c_checkers = ['checkpatch']
 
-if exists(":Tabularize")
-	nmap <Leader>a= :Tabularize /=<CR>
-	vmap <Leader>a= :Tabularize /=<CR>
-	nmap <Leader>a| :Tabularize /|<CR>
-	nmap <Leader>a| :Tabularize /|<CR>
-	vmap <Leader>a: :Tabularize /:\zs<CR>
-	vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
+"if exists(':Tabularize')
+	nmap <leader>a= :Tabularize /= <CR>
+	vmap <leader>a= :Tabularize /= <CR>
+	"nmap <leader>a| :Tabularize /| <CR>
+	"vmap <leader>a| :Tabularize /| <CR>
+	vmap <leader>a: :Tabularize /:\zs <CR>
+	vmap <leader>a: :Tabularize /:\zs <CR>
+"endif
+"
+
+" c-tags
+nnoremap <C-]> g<C-]>
+
+source ~/.vim/plugged/cscope_maps.vim
+
