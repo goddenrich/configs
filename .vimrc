@@ -42,11 +42,22 @@ set dir^=~/.backup//
 "   your search always case-insensitive or case-sensitive, respectively.
 set ignorecase
 
+" go-vim settings
+set autowrite
+noremap <leader>n :cnext<CR>
+noremap <leader>m :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+let g:go_list_type = "quickfix"
+
 " tab indentations for various file types
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd FileType markdown setlocal expandtab shiftwidth=4 softtabstop=4
+
+autocmd FileType yaml setlocal expandtab shiftwidth=2 softtabstop=2
 
 " automatically downloads vim-plug to your machine if not found.
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -88,6 +99,13 @@ Plug 'scrooloose/nerdcommenter'
 
 " T comment
  Plug 'vim-scripts/tComment' "Comment easily with gcc
+
+ " vim-go
+ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+ " vim-sessions
+ Plug 'xolox/vim-session'
+ Plug 'xolox/vim-misc' "required for above
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -137,7 +155,7 @@ let NERDTreeWinSize = 50
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 map <C-n> :NERDTreeToggle<CR>
-nmap <leader>n :NERDTreeFind<CR>
+" nmap <leader>n :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 
 
