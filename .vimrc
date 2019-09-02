@@ -50,6 +50,7 @@ nnoremap <leader>a :cclose<CR>
 autocmd FileType go nmap <leader>b  <Plug>(go-build)
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
 
 " tab indentations for various file types
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
@@ -88,14 +89,14 @@ Plug 'kien/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-" YCM
-Plug 'Valloric/YouCompleteMe'
+" jedi-vim
+Plug 'davidhalter/jedi-vim'
+
+" supertab tab autocompletion
+Plug 'ervandew/supertab'
 
 " syntastic
 Plug 'vim-syntastic/syntastic'
-
-" Nerd commenter
-Plug 'scrooloose/nerdcommenter'
 
 " T comment
  Plug 'vim-scripts/tComment' "Comment easily with gcc
@@ -106,6 +107,15 @@ Plug 'scrooloose/nerdcommenter'
  " vim-sessions
  Plug 'xolox/vim-session'
  Plug 'xolox/vim-misc' "required for above
+
+ " fugitive (git plugin)
+ Plug 'tpope/vim-fugitive'
+
+" LSP
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -149,36 +159,17 @@ let g:ctrlp_working_path_mode = 'r'
 nmap <leader>p :CtrlP<cr>
 
 " Nerdtree
-" autocmd vimenter * NERDTree
 autocmd StdinReadPre * let s:std_in=1
 let NERDTreeWinSize = 50
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+map <leader>f :NERDTreeFind<cr>
 map <C-n> :NERDTreeToggle<CR>
-" nmap <leader>n :NERDTreeFind<CR>
 let g:NERDTreeHijackNetrw=0
 
 
-" YCM
-" Modify below if you want less invasive autocomplete
-let g:ycm_semantic_triggers =  {
- \   'c' : ['->', '.'],
- \   'objc' : ['->', '.'],
- \   'cpp,objcpp' : ['->', '.', '::'],
- \   'perl' : ['->'],
- \   'php' : ['->', '::'],
- \   'cs,java,javascript,d,vim,ruby,python,perl6,scala,vb,elixir,go' : ['.'],
- \   'lua' : ['.', ':'],
- \   'erlang' : [':'],
- \ }
-
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_complete_in_comments_and_strings=1
-let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-let g:ycm_autoclose_preview_window_after_completion = 1
-
-set completeopt-=preview
+" jedi-vim settings
+let g:jedi#use_splits_not_buffers = "left"
 
 " syntastic
 set statusline+=%#warningmsg#
@@ -190,12 +181,11 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_c_checkers = ['checkpatch']
+let g:syntastic_python_python_exec = '/usr/bin/python3'
 
 "if exists(':Tabularize')
 	nmap <leader>a= :Tabularize /= <CR>
 	vmap <leader>a= :Tabularize /= <CR>
-	"nmap <leader>a| :Tabularize /| <CR>
-	"vmap <leader>a| :Tabularize /| <CR>
 	vmap <leader>a: :Tabularize /:\zs <CR>
 	vmap <leader>a: :Tabularize /:\zs <CR>
 "endif
@@ -206,3 +196,24 @@ nnoremap <C-]> g<C-]>
 
 source ~/.vim/plugged/cscope_maps.vim
 
+" LSP config
+
+" Required for operations modifying multiple buffers like rename.
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+    \ 'python': ['~/.local/bin/pyls'],
+    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
+    \ 'plz': ['plz', 'tool', 'lps'],
+    \ 'go': ['~/go/bin/go-langserver'],
+    \ }
+
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+
+
+" TM settings
+autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
+autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4
