@@ -124,6 +124,13 @@ Plug 'autozimu/LanguageClient-neovim', {
 " emmet-vim for html
 Plug 'mattn/emmet-vim'
 
+" indent line
+Plug 'Yggdroot/indentLine'
+
+" jsx pretty
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+
 " All of your Plugins must be added before the following line
 call plug#end()
 
