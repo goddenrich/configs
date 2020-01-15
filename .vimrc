@@ -53,6 +53,10 @@ let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 
 " tab indentations for various file types
+filetype plugin indent on
+
+autocmd FileType html setlocal expandtab shiftwidth=2 softtabstop=2
+
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -116,6 +120,9 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+
+" emmet-vim for html
+Plug 'mattn/emmet-vim'
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -213,6 +220,9 @@ let g:LanguageClient_serverCommands = {
 
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 
+
+" emmet-vim config
+let g:user_emmet_leader_key=','
 
 " TM settings
 autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
