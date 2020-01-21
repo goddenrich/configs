@@ -42,20 +42,11 @@ set dir^=~/.backup//
 "   your search always case-insensitive or case-sensitive, respectively.
 set ignorecase
 
-" go-vim settings
-set autowrite
-noremap <leader>n :cnext<CR>
-noremap <leader>m :cprevious<CR>
-nnoremap <leader>a :cclose<CR>
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
-
 " tab indentations for various file types
 filetype plugin indent on
 
 autocmd FileType html setlocal expandtab shiftwidth=2 softtabstop=2
+
 
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 
@@ -120,6 +111,9 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+
+" vim-plz
+Plug 'goddenrich/vim-plz'
 
 " emmet-vim for html
 Plug 'mattn/emmet-vim'
@@ -227,6 +221,20 @@ let g:LanguageClient_serverCommands = {
 
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 
+" vim-go settings
+set autowrite
+noremap <leader>n :cnext<CR>
+noremap <leader>m :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
+
+" vim-plz settings
+nnoremap <leader>pt :call TestAffectedCurrent()<CR>
+nnoremap <leader>pb :call BuildAffectedCurrent()<CR>
+nnoremap <leader>pc :call CoverAffectedCurrent()<CR>
 
 " emmet-vim config
 let g:user_emmet_leader_key=','
