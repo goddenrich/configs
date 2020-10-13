@@ -22,6 +22,7 @@ endif
 set nu
 
 autocmd FileType text setlocal textwidth=76 spell spelllang=en_gb
+autocmd FileType markdown setlocal spell spelllang=en_gb
 
 " Don't do spell-checking on Vim help files
 autocmd FileType help setlocal nospell
@@ -99,10 +100,6 @@ Plug 'vim-syntastic/syntastic'
  " vim-go
  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
- " vim-sessions
- Plug 'xolox/vim-session'
- Plug 'xolox/vim-misc' "required for above
-
  " fugitive (git plugin)
  Plug 'tpope/vim-fugitive'
 
@@ -168,7 +165,7 @@ nmap <leader>p :CtrlP<cr>
 
 " Nerdtree
 autocmd StdinReadPre * let s:std_in=1
-let NERDTreeWinSize = 50
+let NERDTreeWinSize = 30
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 map <leader>f :NERDTreeFind<cr>
@@ -198,11 +195,6 @@ let g:syntastic_python_python_exec = '/usr/bin/python3'
 	vmap <leader>a: :Tabularize /:\zs <CR>
 "endif
 "
-
-" c-tags
-nnoremap <C-]> g<C-]>
-
-source ~/.vim/plugged/cscope_maps.vim
 
 " LSP config
 
@@ -241,4 +233,6 @@ let g:user_emmet_leader_key=','
 
 " TM settings
 autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
-autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4
+autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 set commentstring=#\ %s
+
+autocmd FileType plz set commentstring=#\ %s
