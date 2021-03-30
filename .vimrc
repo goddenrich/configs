@@ -48,6 +48,8 @@ filetype plugin indent on
 
 autocmd FileType html setlocal expandtab shiftwidth=2 softtabstop=2
 
+autocmd BufNewFile,BufRead *.php :setlocal filetype=php
+autocmd FileType php setlocal expandtab shiftwidth=2 softtabstop=2
 
 autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
 
@@ -121,6 +123,9 @@ Plug 'Yggdroot/indentLine'
 " jsx pretty
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
+
+" " jira
+" Plug 'paulkass/jira-vim', { 'do': 'pip install -r requirements.txt' }
 
 " All of your Plugins must be added before the following line
 call plug#end()
@@ -236,3 +241,4 @@ autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
 autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 set commentstring=#\ %s
 
 autocmd FileType plz set commentstring=#\ %s
+autocmd FileType plz setlocal expandtab
