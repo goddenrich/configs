@@ -124,6 +124,8 @@ Plug 'Yggdroot/indentLine'
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
 
+Plug 'tpope/vim-surround'
+
 " " jira
 " Plug 'paulkass/jira-vim', { 'do': 'pip install -r requirements.txt' }
 
@@ -212,10 +214,10 @@ let g:LanguageClient_serverCommands = {
     \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
     \ 'python': ['~/.local/bin/pyls'],
     \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ 'plz': ['plz', 'tool', 'lps'],
     \ 'go': ['~/go/bin/go-langserver'],
     \ }
 
+    " \ 'plz': ['plz', 'tool', 'lps'],
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 
 " vim-go settings
@@ -238,7 +240,7 @@ let g:user_emmet_leader_key=','
 
 " TM settings
 autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
-autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 set commentstring=#\ %s
+autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 commentstring=#\ %s
 
 autocmd FileType plz set commentstring=#\ %s
 autocmd FileType plz setlocal expandtab
