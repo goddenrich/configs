@@ -1,0 +1,188 @@
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+set viminfo='100,<1000,s100,h
+
+" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+inoremap <C-U> <C-G>u<C-U>
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+if has('mouse')
+  set mouse=a
+endif
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
+" Line numbers
+set nu
+
+" cursor to block on all normal visual command and insert modes
+set guicursor=n-v-c-i:block
+
+
+autocmd FileType text setlocal textwidth=76 spell spelllang=en_gb
+autocmd FileType markdown setlocal spell spelllang=en_gb
+
+" Don't do spell-checking on Vim help files
+autocmd FileType help setlocal nospell
+
+" Prepend ~/.backup to backupdir so that Vim will look for that directory
+" before littering the current dir with backups.
+" You need to do "mkdir ~/.backup" for this to work.
+set backupdir^=~/.backup
+set undodir^=~/.backup
+" Also use ~/.backup for swap files. The trailing // tells Vim to
+"    incorporate
+"    " full path into swap file names.
+set dir^=~/.backup//
+
+" Ignore case when searching
+" - override this setting by tacking on \c or \C to your search term to
+"    make
+"   your search always case-insensitive or case-sensitive, respectively.
+set ignorecase
+
+" tab indentations for various file types
+filetype plugin indent on
+
+autocmd FileType html setlocal expandtab shiftwidth=2 softtabstop=2
+
+autocmd BufNewFile,BufRead *.php :setlocal filetype=php
+autocmd FileType php setlocal expandtab shiftwidth=2 softtabstop=2
+
+autocmd FileType python setlocal expandtab shiftwidth=4 softtabstop=4
+
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd FileType markdown setlocal expandtab shiftwidth=4 softtabstop=4
+
+autocmd FileType yaml setlocal expandtab shiftwidth=2 softtabstop=2
+
+" automatically downloads vim-plug to your machine if not found.
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+let mapleader = " "
+
+" emulate system clipboard
+inoremap <C-v> <ESC>"+pa
+vnoremap <C-c> "+y
+
+" Define plugins to install
+call plug#begin('~/.vim/plugged')
+
+" Browse the file system
+Plug 'scrooloose/nerdtree'
+
+" " Ctrlp
+Plug 'kien/ctrlp.vim'
+
+" Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" T comment
+ Plug 'vim-scripts/tComment' "Comment easily with gcc
+
+ " vim-go
+ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+ " fugitive (git plugin)
+ Plug 'tpope/vim-fugitive'
+
+ Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" All of your Plugins must be added before the following line
+call plug#end()
+
+" Airline
+let g:airline#extensions#tabline#enabled = 1 " Enable the list of buffers
+let g:airline#extensions#tabline#fnamemod = ':t' " Show just the filename
+
+" -----------Buffer Management---------------
+set hidden " Allow buffers to be hidden if you've modified a buffer
+
+" Move to the next buffer
+nmap <leader>l :bnext<CR>
+
+" Move to the previous buffer
+nmap <leader>h :bprevious<CR>
+
+" Close the current buffer and move to the previous one
+" This replicates the idea of closing a tab
+nmap <leader>q :bp <BAR> bd #<CR>
+
+" Show all open buffers and their status
+nmap <leader>bl :ls<CR>
+
+
+" Use arrow keys to navigate window splits
+noremap <leader><Right> :wincmd l <CR>
+noremap <leader><Left> :wincmd h <CR>
+noremap <leader><Up> :wincmd k <CR>
+noremap <leader><Down> :wincmd j <CR>
+
+" ctrl-p
+let g:ctrlp_custom_ignore = {
+	\ 'dir':  '\v[\/](\.(git|hg|svn)|\_site)$',
+	\ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
+	\}
+
+" Use the nearest .git|.svn|.hg|.bzr directory as the cwd
+let g:ctrlp_working_path_mode = 'r'
+
+nmap <leader>p :CtrlP<cr>
+
+" Nerdtree
+autocmd StdinReadPre * let s:std_in=1
+let NERDTreeWinSize = 30
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+map <leader>f :NERDTreeFind<cr>
+map <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeHijackNetrw=0
+
+" Required for operations modifying multiple buffers like rename.
+set hidden
+
+" vim-go settings
+set autowrite
+noremap <leader>n :cnext<CR>
+noremap <leader>m :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+let g:go_fmt_command = "goimports"
+let g:go_doc_url = 'https://godoc-redirector.iap.tmachine.io'
+let g:go_def_mode = 'gopls'
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_autodetect_gopath = 1
+let g:go_gopls_enabled = 1
+
+" fold settings
+set foldmethod=indent
+autocmd FileType vim setlocal foldmethod=marker
+noremap <leader>z za
+set foldlevel=99
+
+
+" TM settings
+autocmd BufNewFile,BufRead *.build_def,*.build_defs :setlocal filetype=plz syntax=python
+autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 commentstring=#\ %s
+autocmd BufNewFile,BufRead .build :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 commentstring=#\ %s
+
+autocmd FileType plz set commentstring=#\ %s
+autocmd FileType plz setlocal expandtab
+
+if &diff
+	syntax off
+endif
+
+nmap <leader>r <Plug>(coc-rename)
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
