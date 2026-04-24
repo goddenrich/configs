@@ -105,12 +105,6 @@ Plug 'vim-syntastic/syntastic'
  " fugitive (git plugin)
  Plug 'tpope/vim-fugitive'
 
-" LSP
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-
 " vim-plz
 Plug 'goddenrich/vim-plz'
 
@@ -125,6 +119,8 @@ Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
 
 Plug 'tpope/vim-surround'
+
+" Plug 'vim-scripts/ConflictMotions'
 
 " " jira
 " Plug 'paulkass/jira-vim', { 'do': 'pip install -r requirements.txt' }
@@ -208,27 +204,19 @@ let g:syntastic_python_python_exec = '/usr/bin/python3'
 " Required for operations modifying multiple buffers like rename.
 set hidden
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-    \ 'python': ['~/.local/bin/pyls'],
-    \ 'ruby': ['~/.rbenv/shims/solargraph', 'stdio'],
-    \ 'go': ['~/go/bin/go-langserver'],
-    \ }
-
-    " \ 'plz': ['plz', 'tool', 'lps'],
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-
 " vim-go settings
 set autowrite
 noremap <leader>n :cnext<CR>
 noremap <leader>m :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
+let g:go_bin_path = ''
+let g:go_auto_type_info = 0
+let g:go_gopls_enabled = 1
+let g:go_null_module_warning = 0
+let g:go_search_bin_path_first = 0
+let g:go_def_mode = 'gopls'
+let g:go_info_mode = 'gopls'
 
 " vim-plz settings
 nnoremap <leader>pt :call TestAffectedCurrent()<CR>
@@ -241,6 +229,11 @@ let g:user_emmet_leader_key=','
 " TM settings
 autocmd BufNewFile,BufRead *.build_defs :setlocal filetype=plz syntax=python
 autocmd BufNewFile,BufRead BUILD :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 commentstring=#\ %s
+autocmd BufNewFile,BufRead .build :setlocal filetype=plz syntax=python ts=8 sts=4 et sw=4 commentstring=#\ %s
 
 autocmd FileType plz set commentstring=#\ %s
 autocmd FileType plz setlocal expandtab
+
+if &diff
+	syntax off
+endif
